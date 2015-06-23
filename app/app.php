@@ -4,9 +4,9 @@
 
     $app = new Silex\Application();
 
-    $database = 'mysql:host=localhost;dbname=to_do';
+    $server = 'mysql:host=localhost;dbname=to_do';
     $username = 'root';
-    $DB = new PDO($database, $username);
+    $DB = new PDO($server, $username);
 
     $app->register(new Silex\Provider\TwigServiceProvider(), array(
         'twig.path' => __DIR__.'/../views'

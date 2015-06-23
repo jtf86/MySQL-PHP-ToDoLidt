@@ -7,9 +7,9 @@
 
 require_once "src/Task.php";
 
-$database = 'mysql:host=localhost;dbname=to_do_test';
+$server = 'mysql:host=localhost;dbname=to_do_test';
 $username = 'root';
-$DB = new PDO($database, $username);
+$DB = new PDO($server, $username);
 
 
 
@@ -36,21 +36,6 @@ class TaskTest extends PHPUnit_Framework_TestCase
     $this->assertEquals(1, $result);
   }
 
-  function test_setId()
-  {
-    //Arrange
-    $description = "Wash the dog";
-    $id = null;
-    $test_Task = new Task($description, $id);
-
-    //Act
-    $test_Task->setId(2);
-
-    //Assert
-    $result = $test_Task->getId();
-    $this->assertEquals(2, $result);
-  }
-
   function test_save()
   {
     //Arrange
@@ -71,7 +56,6 @@ class TaskTest extends PHPUnit_Framework_TestCase
     //Arrange
     $description = "Wash the dog";
     $description2 = "Water the lawn";
-    $id = null;
     $test_Task = new Task($description);
     $test_Task->save();
     $test_Task2 = new Task($description2);
@@ -89,7 +73,6 @@ class TaskTest extends PHPUnit_Framework_TestCase
     //Arrange
     $description = "Wash the dog";
     $description2 = "Water the lawn";
-    $id = null;
     $test_Task = new Task($description);
     $test_Task->save();
     $test_Task2 = new Task($description2);
@@ -101,6 +84,24 @@ class TaskTest extends PHPUnit_Framework_TestCase
     //Assert
     $result = Task::getAll();
     $this->assertEquals([], $result);
+  }
+
+  function test_find()
+  {
+    //Arrange
+    $description = "Wash the dog";
+    $id = null;
+    $description2 = "Water the lawn";
+    $test_Task = new Task($description);
+    $test_Task->save();
+    $test_Task2 = new Task($description2);
+    $test_Task2->save();
+
+    //Act
+    $result = Task::find($test_Task->getId());
+
+    //Assert
+    $this->assertEquals($test_Task, $result);
   }
 
 }
