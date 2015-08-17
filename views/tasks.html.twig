@@ -3,7 +3,8 @@
     <title>To Do List</title>
 </head>
 <body>
-    <h1>To Do List</h1>
+    <h1>Tasks</h1>
+
     {% if tasks is not empty %}
         <p>Here are all your tasks:</p>
         <ul>
@@ -14,15 +15,15 @@
     {% endif %}
 
     <form action='/tasks' method='post'>
-        <label for='description'>Task Description</label>
+        <label for='description'>Task description</label>
         <input id='description' name='description' type='text'>
 
         <button type='submit'>Add task</button>
     </form>
-
     <form action='/delete_tasks' method='post'>
         <button type='submit'>Clear</button>
-        </form>
+    </form>
 
+    <p><a href='/'>Home</a></p>
 </body>
 </html>
