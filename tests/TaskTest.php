@@ -9,9 +9,8 @@ require_once "src/Task.php";
 
 $server = 'mysql:host=localhost;dbname=to_do_test';
 $username = 'root';
-$DB = new PDO($server, $username);
-
-
+$password = 'root';
+$DB = new PDO($server, $username, $password);
 
 
 class TaskTest extends PHPUnit_Framework_TestCase
