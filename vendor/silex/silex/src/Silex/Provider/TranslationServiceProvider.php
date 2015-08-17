@@ -28,7 +28,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
     public function register(Application $app)
     {
         $app['translator'] = $app->share(function ($app) {
-            $translator = new Translator($app, $app['translator.message_selector']);
+            $translator = new Translator($app, $app['translator.message_selector'], $app['translator.cache_dir'], $app['debug']);
 
             // Handle deprecated 'locale_fallback'
             if (isset($app['locale_fallback'])) {
@@ -40,6 +40,11 @@ class TranslationServiceProvider implements ServiceProviderInterface
             $translator->addLoader('array', new ArrayLoader());
             $translator->addLoader('xliff', new XliffFileLoader());
 
+            // Register default resources
+            foreach ($app['translator.resources'] as $resource) {
+                $translator->addResource($resource[0], $resource[1], $resource[2], $resource[3]);
+            }
+
             foreach ($app['translator.domains'] as $domain => $data) {
                 foreach ($data as $locale => $messages) {
                     $translator->addResource('array', $messages, $locale, $domain);
@@ -49,12 +54,17 @@ class TranslationServiceProvider implements ServiceProviderInterface
             return $translator;
         });
 
+        $app['translator.resources'] = function ($app) {
+            return array();
+        };
+
         $app['translator.message_selector'] = $app->share(function () {
             return new MessageSelector();
         });
 
         $app['translator.domains'] = array();
         $app['locale_fallbacks'] = array('en');
+        $app['translator.cache_dir'] = null;
     }
 
     public function boot(Application $app)

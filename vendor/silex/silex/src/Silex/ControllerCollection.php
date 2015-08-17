@@ -43,9 +43,6 @@ class ControllerCollection
     protected $defaultController;
     protected $prefix;
 
-    /**
-     * Constructor.
-     */
     public function __construct(Route $defaultRoute)
     {
         $this->defaultRoute = $defaultRoute;
@@ -140,6 +137,19 @@ class ControllerCollection
     }
 
     /**
+     * Maps an OPTIONS request to a callable.
+     *
+     * @param string $pattern Matched route pattern
+     * @param mixed  $to      Callback that returns the response when matched
+     *
+     * @return Controller
+     */
+    public function options($pattern, $to = null)
+    {
+        return $this->match($pattern, $to)->method('OPTIONS');
+    }
+
+    /**
      * Maps a PATCH request to a callable.
      *
      * @param string $pattern Matched route pattern
@@ -178,12 +188,20 @@ class ControllerCollection
      */
     public function flush($prefix = '')
     {
-        $routes = new RouteCollection();
+        return $this->doFlush($prefix, new RouteCollection());
+    }
+
+    private function doFlush($prefix, RouteCollection $routes)
+    {
+        if ($prefix !== '') {
+            $prefix = '/'.trim(trim($prefix), '/');
+        }
 
         foreach ($this->controllers as $controller) {
             if ($controller instanceof Controller) {
+                $controller->getRoute()->setPath($prefix.$controller->getRoute()->getPath());
                 if (!$name = $controller->getRouteName()) {
-                    $name = $controller->generateRouteName($prefix);
+                    $name = $controller->generateRouteName('');
                     while ($routes->get($name)) {
                         $name .= '_';
                     }
@@ -192,11 +210,9 @@ class ControllerCollection
                 $routes->add($name, $controller->getRoute());
                 $controller->freeze();
             } else {
-                $routes->addCollection($controller->flush($controller->prefix));
+                $routes->addCollection($controller->doFlush($prefix.$controller->prefix, $routes));
             }
         }
-
-        $routes->addPrefix($prefix);
 
         $this->controllers = array();
 

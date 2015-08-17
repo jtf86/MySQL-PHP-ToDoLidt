@@ -8,13 +8,14 @@ standalone.
 Parameters
 ----------
 
-none
+* **validator.validator_service_ids**: An array of service names representing
+  validators.
 
 Services
 --------
 
 * **validator**: An instance of `Validator
-  <http://api.symfony.com/master/Symfony/Component/Validator/Validator.html>`_.
+  <http://api.symfony.com/master/Symfony/Component/Validator/ValidatorInterface.html>`_.
 
 * **validator.mapping.class_metadata_factory**: Factory for metadata loaders,
   which can read validation constraint information from classes. Defaults to
@@ -23,10 +24,6 @@ Services
   This means you can define a static ``loadValidatorMetadata`` method on your
   data class, which takes a ClassMetadata argument. Then you can set
   constraints on this ClassMetadata instance.
-
-* **validator.validator_factory**: Factory for ConstraintValidators. Defaults
-  to a standard ``ConstraintValidatorFactory``. Mostly used internally by the
-  Validator.
 
 Registering
 -----------
@@ -217,5 +214,5 @@ provider and register the messages under the ``validators`` domain::
         ),
     );
 
-For more information, consult the `Symfony2 Validation documentation
+For more information, consult the `Symfony Validation documentation
 <http://symfony.com/doc/master/book/validation.html>`_.
