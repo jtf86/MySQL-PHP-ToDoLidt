@@ -21,7 +21,8 @@
 
         protected function tearDown()
         {
-            Task::deleteAll();
+          Category::deleteAll();
+          Task::deleteAll();
         }
 
         function test_getId()
